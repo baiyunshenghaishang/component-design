@@ -1,5 +1,6 @@
+const path= require('path')
 module.exports = {
-    entry: './main.js',
+    entry: './main1.js',
     mode: 'development',
     optimization: {
         minimize: false,
@@ -23,6 +24,12 @@ module.exports = {
                     },
                 },
             },
+            {
+                test:/\.view/,
+                use:{
+                    loader:path.resolve('./myloader.js')
+                }
+            }
         ],
     },
 }

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <body>
+        <div id="el" style="width: 200px; height: 200px; background: lightgreen;"></div>
+        <div id="el2" style="width: 200px; height: 200px; background: lightgreen;"></div>
+        <button id="start-btn">start</button>
+        <button id="pause-btn">stop</button>
+        <button id="resume-btn">resume</button>
+        <button id="el2-start-btn">el2-start</button>
+
+        <script type="module">
+            import { TimeLine, Animation, ColorAnimation } from './animation.js'
+            import cubicBezier from './cubicBezier.js'
+            let tl = new TimeLine(),
+                el = document.querySelector('#el')
+
+            let ease = cubicBezier(0.25, 0.1, 0.25, 1),
+                linear = cubicBezier(0, 0, 1, 1)
+            let animation = new Animation({
+                object: el.style,
+                property: 'transform',
+                template: (v) => `translateX(${v}px)`,
+                start: 0,
+                end: 800,
+                duration: 8000,
+                timingFunction: ease,
+            })
+
+            tl.add(animation)
+            document.querySelector('#start-btn').addEventListener('click', () => {
+                tl.start()
+            })
+            document.querySelector('#pause-btn').addEventListener('click', () => {
+                tl.pause()
+            })
+            document.querySelector('#resume-btn').addEventListener('click', () => {
+                tl.resume()
+            })
+            document.querySelector('#el2-start-btn').addEventListener('click', () => {
+                let el2 = document.querySelector('#el2')
+                let animation2 = new ColorAnimation({
+                    object: el2.style,
+                    property: 'background',
+                    start: { r: 0, g: 0, b: 0, a: 1 },
+                    end: { r: 255, g: 0, b: 0, a: 1 },
+                    duration: 8000,
+                    timingFunction: linear,
+                })
+
+                tl.add(animation2)
+            })
+        </script>
+    </body>
+</html>
