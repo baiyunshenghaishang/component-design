@@ -1,3 +1,4 @@
+import cubicBezier from './cubicBezier'
 export class TimeLine {
     constructor() {
         this.animations = []
@@ -7,10 +8,11 @@ export class TimeLine {
         this.state = 'init'
     }
     tick() {
-        let animations = this.animations.filter((it) => !it.finished)
+        this.animations = this.animations.filter((it) => !it.finished)
+
         let t = Date.now() - this.startTime
 
-        for (let animation of animations) {
+        for (let animation of this.animations) {
             const { object, property, template, delay, timingFunction, duration, addTime } = animation
             if (t > delay + duration + addTime) {
                 animation.finished = true
@@ -20,7 +22,7 @@ export class TimeLine {
                 value = animation.valueFromProgression(progression)
             object[property] = template(value)
         }
-        if (animations.length) this.requestId = requestAnimationFrame(() => this.tick())
+        if (this.animations.length) this.requestId = requestAnimationFrame(() => this.tick())
     }
     pause() {
         if (this.state != 'playing') return
@@ -49,7 +51,16 @@ export class TimeLine {
         this.start()
     }
 
+    reset(){
+        this.animations = []
+        this.startTime = null
+        this.requestId = null
+        this.pauseTime = null
+        this.state = 'init'
+    }
+
     add(animation, addTime) {
+        let needRestart = !this.animations.length && this.state === 'playing'
         this.animations.push(animation)
         if (this.state === 'playing') {
             animation.addTime = addTime !== void 0 ? addTime : Date.now() - this.startTime
@@ -58,6 +69,9 @@ export class TimeLine {
         } else {
             animation.addTime = addTime !== void 0 ? addTime : 0
         }
+        if (needRestart) {
+            this.tick()
+        }
     }
 }
 
@@ -65,7 +79,7 @@ export class Animation {
     constructor({ object, property, template, start, end, duration, delay, timingFunction }) {
         this.object = object
         this.property = property
-        this.template = template || (val=>val)
+        this.template = template || ((val) => val)
         this.start = start
         this.end = end
         this.duration = duration
@@ -86,3 +100,6 @@ export class ColorAnimation extends Animation {
         return `rgba(${getVal('r')},${getVal('g')},${getVal('b')},${getVal('a')})`
     }
 }
+
+export const ease = cubicBezier(0.25, 0.1, 0.25, 1)
+export const linear = cubicBezier(0, 0, 1, 1)

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <style>
+            html,
+            body {
+                height: 100%;
+            }
+            #gesture {
+                width: 300px;
+                height: 100px;
+                background-color: lightgreen;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="gesture"></div>
+        <script type="module">
+            import { enableGesture } from './index.js'
+            let el = document.querySelector('#gesture')
+            let x = 0,
+                y = 0
+            el.addEventListener('pan', (e) => {
+                const { clientX, startX, clientY, startY } = e.detail
+                console.log('pan')
+            })
+            el.addEventListener('panend', (e) => {
+                const { clientX, startX, clientY, startY } = e.detail
+                x = clientX - startX + x
+                y = clientY - startY + y
+            })
+            el.addEventListener('tap', (e) => {
+                console.log('tap', e.detail)
+            })
+            el.addEventListener('pressstart', (e) => {
+                console.log('pressstart', e.detail)
+            })
+            el.addEventListener('pressend', (e) => {
+                console.log('pressend', e.detail)
+            })
+            el.addEventListener('flick', (e) => {
+                console.log('flick', e.detail)
+            })
+            el.addEventListener('panstart', (e) => {
+                console.log('panstart', e.detail)
+            })
+            enableGesture(el)
+        </script>
+    </body>
+</html>

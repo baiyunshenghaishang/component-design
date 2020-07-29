@@ -1,3 +1,4 @@
+import { enableGesture } from './gesture'
 export default function create(Cls, attributes, ...children) {
     let o
 
@@ -51,7 +52,16 @@ class Wrapper {
 
     setAttribute(name, value) {
         //attribute
-        this.root.setAttribute(name, value)
+
+        let match = /^on([\s\S]+)$/.exec(name)
+        if (match) {
+            let eventName = match[1].replace(/^[\s\S]/, (c) => c.toLowerCase())
+            this.root.addEventListener(eventName, value)
+        } else if (name === 'enableGesture' && value) {
+            enableGesture(this.root)
+        } else {
+            this.root.setAttribute(name, value)
+        }
     }
 
     addEventListener() {
