@@ -1,6 +1,6 @@
 import createElement from './createElement'
 import { TimeLine, Animation, ease } from './animation'
-
+import './carousel.css'
 export default class Carousel {
     constructor(config) {
         this.children = []

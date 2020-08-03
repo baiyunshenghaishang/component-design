@@ -1,4 +1,4 @@
-const path= require('path')
+const path = require('path')
 module.exports = {
     entry: './main1.js',
     mode: 'development',
@@ -25,11 +25,17 @@ module.exports = {
                 },
             },
             {
-                test:/\.view/,
-                use:{
-                    loader:path.resolve('./myloader.js')
-                }
-            }
+                test: /\.view/,
+                use: {
+                    loader: path.resolve('./myloader.js'),
+                },
+            },
+            {
+                test: /\.css$/,
+                use: {
+                    loader: path.resolve('./cssloader.js'),
+                },
+            },
         ],
     },
 }
